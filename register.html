@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - Smart Mapping</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Kinopya mula sa admin_login.html */
+    :root {
+      --primary: #0d6efd;
+      --accent: #4facfe;
+      --accent2: #00f2fe;
+      --bg-card: #fff;
+      --text-main: #212529;
+      --border-radius: 20px; /* Inayos mula 18px */
+    }
+    body {
+      background: linear-gradient(120deg, var(--accent), var(--accent2)), url('images/background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+    /* Ginamit ang .login-box class para sa parehong style */
+    .login-box {
+      background: rgba(255,255,255,0.93);
+      padding: 36px 32px 28px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+      width: 100%;
+      max-width: 410px;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-box::before {
+      content: "";
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      opacity: 0.13;
+      border-radius: 50%;
+      z-index: 0;
+    }
+    .login-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    /* Inayos ang h3 selector para tumugma sa h4 ng login page */
+    .login-box h3 {
+      text-align: center;
+      margin-bottom: 18px;
+      font-weight: 600;
+      color: var(--primary);
+      letter-spacing: 0.5px;
+    }
+    .form-label {
+      font-weight: 500;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+    .form-control {
+      border-radius: 10px;
+      border: 1px solid #dbeafe;
+      font-size: 1rem;
+      padding: 10px 12px;
+      background: #f8fafc;
+      color: var(--text-main);
+      transition: border-color 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px #e3f2fd;
+      background: #fff;
+    }
+    /* Ginamit ang style ng #login-status */
+    #username-status {
+      font-size: .95em;
+      margin-top: 6px;
+      min-height: 20px;
+      color: #e74c3c;
+      font-weight: 500;
+      text-align: center; /* Ginawang center align */
+    }
+    /* Ginamit ang style ng .btn-primary */
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary), var(--accent2));
+      border: none;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(90deg, var(--accent2), var(--primary));
+    }
+    /* Inayos ang button para gumamit ng .btn-primary */
+    .btn-link {
+      color: var(--primary);
+      font-weight: 500;
+      text-decoration: none;
+      border-radius: 10px; /* Inayos mula 8px */
+      transition: background 0.2s;
+    }
+    .btn-link:hover {
+      background: #e3f2fd;
+      color: var(--primary);
+      text-decoration: underline;
+    }
+    @media (max-width: 500px) {
+      .login-box {
+        padding: 24px 10px 18px;
+        max-width: 98vw;
+      }
+      .login-logo {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box"> <div class="login-logo">
+      <i class="fa-solid fa-location-dot"></i>
+      Smart Mapping
+    </div>
+    <h3>Create an Account</h3>
+    <form action="register.php" method="POST" onsubmit="return checkFinalValidation();">
+      <div class="mb-3">
+        <label class="form-label" for="username">Username</label>
+        <input type="text" name="username" id="username" class="form-control" required autocomplete="off" />
+        <div id="username-status"></div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="password">Password</label>
+        <input type="password" name="password" id="password" class="form-control" required autocomplete="new-password" />
+      </div>
+      <button type="submit" class="btn btn-primary w-100 mt-2">Register</button>
+      
+      <div class="text-center mt-3">
+        <p class="mb-0 text-muted">Already have an account? 
+          <a href="login.html" class="text-decoration-none fw-bold">Login here</a>
+        </p>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+  <script>
+    const usernameInput = document.getElementById('username');
+    const statusText = document.getElementById('username-status');
+    let usernameTaken = false;
+
+    usernameInput.addEventListener('input', () => {
+      const username = usernameInput.value.trim();
+      if (username.length < 3) {
+        statusText.textContent = '';
+        usernameTaken = false;
+        return;
+      }
+
+      fetch('check_username.php?username=' + encodeURIComponent(username))
+        .then(response => response.text())
+        .then(data => {
+          if (data === 'taken') {
+            statusText.textContent = 'Username already exists';
+            usernameTaken = true;
+          } else {
+            statusText.textContent = '';
+            usernameTaken = false;
+          }
+        });
+    });
+
+    function checkFinalValidation() {
+      if (usernameTaken) {
+        alert("Please choose a different username.");
+        return false;
+      }
+      return true;
+    }
+  </script>
+</body>
+</html>
